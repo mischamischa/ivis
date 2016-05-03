@@ -1,5 +1,6 @@
 var cy = cytoscape({
     container: document.getElementById('cy'),
+
     elements: {
         nodes: [
             { data: { id: '0'} },
@@ -7,5 +8,6 @@ var cy = cytoscape({
         ],
         edges: [
             { data: { source: '0', target: '1' } },
-        ] },
-})
+        ]
+    },
+});
