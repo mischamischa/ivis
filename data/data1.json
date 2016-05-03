@@ -1,0 +1,70 @@
+{
+  "image": {
+    "title": "Frieden",
+    "year" : "1965",
+    "description" : "Blabalbal ... blablab",
+    "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+  },
+  "categories":[
+    {
+      "title" : { "label": "Werke", "value": "Wolfgang Bach" },
+      "images" : [
+        {
+          "title": "Sinken",
+          "year" : "1934",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        },
+        {
+          "title": "Das Schwarze",
+          "year" : "1937",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        },
+        {
+          "title": "Stürmische See",
+          "year" : "1945",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        }
+      ]
+    },
+    {
+      "title" : { "label": "Gallerie", "value": "Weltausstellung - MoMa 2001" },
+      "images" : [
+        {
+          "title": "Sinken",
+          "year" : "1934",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        },
+        {
+          "title": "Das Schwarze",
+          "year" : "1937",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        },
+        {
+          "title": "Stürmische See",
+          "year" : "1945",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        }
+      ]
+    },
+    {
+      "title" : { "label": "Jahr", "value": "1965" },
+      "images" : [
+        {
+          "title": "Sinken",
+          "year" : "1934",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        },
+        {
+          "title": "Das Schwarze",
+          "year" : "1937",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        },
+        {
+          "title": "Stürmische See",
+          "year" : "1945",
+          "url":"http://server1102.cs.technik.fhnw.ch/bilder/008340e1.jpg"
+        }
+      ]
+    }
+  ]
+}
