@@ -5,8 +5,13 @@ var cy = cytoscape({
         {
             selector: 'node',
             style: {
+                'background-image':'http://server1102.cs.technik.fhnw.ch/bilder/007821SE4.jpg',
+                'background-width': '120%',
+                'background-height': '120%',
+                'shape': 'rectangle',
                 'background-color': '#666',
                 'label': 'data(name)'
+
             }
         },
         {
@@ -18,28 +23,13 @@ var cy = cytoscape({
             }
         }
     ],
-});
-
-
-var req = new XMLHttpRequest();
-req.addEventListener("load", reqListener);
-req.open("GET", "http://server1102.cs.technik.fhnw.ch/json.php?t=Ort&n=200&c=GEONAME,SPRACODE");
-req.send();
-
-function reqListener () {
-    var langs = new Set();
-    rows = JSON.parse(this.responseText);
-    cy.startBatch();
-    for(r in rows) {
-        obj = rows[r];
-        cy.add({group: "nodes", data: {id:r, name:obj['GEONAME']}});
-        lang = obj['SPRACODE'];
-        if(!langs.has(lang)) {
-            langs.add(lang)
-            cy.add({group: "nodes", data: {id:lang, name:lang}});
-        }
-        cy.add({group: "edges", data: {source:r, target:lang}});
+    elements: {
+        nodes: [
+            { data: { id: '0'} },
+            { data: { id: '1'} },
+        ],
+        edges: [
+            { data: { source: '0', target: '1' } },
+        ]
     }
-    cy.endBatch();
-    cy.elements().layout({ name: 'cose' });
-}
+});
