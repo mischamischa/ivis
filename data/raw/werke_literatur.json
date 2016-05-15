@@ -1,18 +1,122 @@
 [
  {
-   "HAUPTNR":9894840,
-   "TITEL":"10 Minuten Plastik I",
-   "JAHR":1956,
-   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/78924S1.jpg",
-   "NAMIDENT":"Luginbühl, Bernhard",
-   "TITEL":"X Mas Schau"
+   "sikartId":6005162,
+   "TITEL":"Schnee im Engadin",
+   "JAHR":1907,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/013211E1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
  },
  {
-   "HAUPTNR":9894900,
-   "TITEL":"Kehrichtengel",
-   "JAHR":1956,
-   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/78972E1.jpg",
-   "NAMIDENT":"Luginbühl, Bernhard",
-   "TITEL":"X Mas Schau"
+   "sikartId":6005315,
+   "TITEL":"Herbstabend",
+   "JAHR":1892,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/716CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6004796,
+   "TITEL":"Die Schynige Platte",
+   "JAHR":1909,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/071425E1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6005005,
+   "TITEL":"Genfersee mit Mont-Blanc am frühen Morgen",
+   "JAHR":1918,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/9264E2.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6004884,
+   "TITEL":"Der Niesen an einem Regentag",
+   "JAHR":1910,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/9177CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6004772,
+   "TITEL":"Die Lawine",
+   "JAHR":1887,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/019345E1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6006463,
+   "TITEL":"Bildnis Augustine Dupin",
+   "JAHR":1885,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/44702CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6008211,
+   "TITEL":"Heilige Stunde",
+   "JAHR":1907,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/070117CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6007642,
+   "TITEL":"Blick ins Unendliche, Einzelfigur",
+   "JAHR":1914,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/071712E1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6008868,
+   "TITEL":"Der zornige Krieger",
+   "JAHR":1883,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/044700E1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6008011,
+   "TITEL":"Ergriffenheit",
+   "JAHR":1900,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/70115CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6011571,
+   "TITEL":"Heilige Stunde",
+   "JAHR":1907,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/73757CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":9842145,
+   "TITEL":"Weib am Bache",
+   "JAHR":1905,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/078444CE1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6008206,
+   "TITEL":"Heilige Stunde",
+   "JAHR":1906,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/42847DS1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
+ },
+ {
+   "sikartId":6006273,
+   "TITEL":"Bildnis Valentine Godé-Darel",
+   "JAHR":1912,
+   "URL":"http://server1102.cs.technik.fhnw.ch/bilder/001228E1.jpg",
+   "NAMIDENT":"Hodler, Ferdinand",
+   "TITEL":"Ferdinand Hodler: A biographical note"
  }
 ]
