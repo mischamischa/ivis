@@ -1,0 +1,733 @@
+<html>
+<head>
+<meta charset="utf-8" />
+    
+<link href='http://fonts.googleapis.com/css?family=Life+Savers|Didact+Gothic' rel='stylesheet' type='text/css'>   
+<meta charset="utf-8" />
+  
+<style>
+.body {
+  background: #000000;
+}
+.node {
+  stroke: #009900;
+  stroke-width: 1.5px;
+  color: #009900;
+ 
+}
+ 
+ 
+.node text {
+  pointer-events: none;
+  font: 15px sans-serif;
+  stroke-width: 0px;
+  color: #CCC;
+  font-weight: bold;
+}
+ 
+.link {
+  stroke: #999;
+  /* stroke-opacity: 2.6; */
+}
+ 
+ 
+path.link {
+  fill: none;
+  stroke-width: 2px;
+}
+ 
+ 
+marker#end {
+  fill: #999;
+ 
+}
+ 
+line {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+svg {
+  color: #CCC;
+  background: #000;
+  width: 1200px;
+  height: 800px;
+}
+</style>
+
+
+<link href='http://fonts.googleapis.com/css?family=Life+Savers|Didact+Gothic' rel='stylesheet' type='text/css'>
+
+  
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    
+</head>
+<body>
+
+<script>
+var data = {
+  "image": {
+    "title": "10 Minuten Plastik I",
+    "year": 1956,
+    "description": "Luginbühl, Bernhard, <I>10 Minuten Plastik I<I>, 1956, Eisen, geschweisst und mit Löteisen betropft, 53,5 x 11 x 12,3 cm",
+    "url": "http://server1102.cs.technik.fhnw.ch/bilder/78924S1.jpg"
+  },
+  "children": [{
+    "title": {
+      "label": "Werke des Künstler",
+      "value": "Luginbühl, Bernhard"
+    },
+    "children": [{
+      "id": 9783973,
+      "title": "Aggression",
+      "year": 1955,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23500S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9784688,
+      "title": "Stengel mit Rohrbogen",
+      "year": 1969,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/67663S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9787392,
+      "title": "Porträt HL",
+      "year": 1948,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77664DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9795681,
+      "title": "Punch II",
+      "year": 1966,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77818S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9789220,
+      "title": "Spatzenkanone",
+      "year": 1955,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77687DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9795661,
+      "title": "Kleine Aggression Ipsach",
+      "year": 1961,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77815DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9806308,
+      "title": "Donauatlas",
+      "year": 1977,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77894DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803202,
+      "title": "Kleiner Punch",
+      "year": 1965,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77880DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803146,
+      "title": "Stengel mit Welle",
+      "year": 1968,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77870S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803151,
+      "title": "Stengel mit Nieten",
+      "year": 1968,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77871DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9794201,
+      "title": "Kleines Modell I zur C-Figur Noldi",
+      "year": 1960,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77797DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9793104,
+      "title": "Grosser Frosch BL 105",
+      "year": 1996,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77745DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803162,
+      "title": "Giraffe mit Nieten",
+      "year": 1968,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77875S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803166,
+      "title": "Kleiner Stengel II",
+      "year": 1974,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77877DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803240,
+      "title": "Kleiner Osakapunch II",
+      "year": 1969,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77884S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9793112,
+      "title": "Kleines Modell zu Silvester. Prototyp",
+      "year": 1999,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77746S1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9811202,
+      "title": "Figur, mittlere Version",
+      "year": 1996,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/78139DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9792680,
+      "title": "Grosser Boss",
+      "year": 1972,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77727DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9803308,
+      "title": "Silberschwan",
+      "year": 1978,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77888DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }, {
+      "id": 9794220,
+      "title": "Raumhaken Typ E II",
+      "year": 1975,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/77802DIV1.jpg",
+      "artist": "Luginbühl, Bernhard"
+    }]
+  }, {
+    "title": {
+      "label": "Werke aus dem selben Jahr",
+      "value": 1956
+    },
+    "children": [{
+      "id": 13012573,
+      "title": "Porträt Cuno Amiet",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/98024SC1.jpg",
+      "artist": "Wiggli, Oscar"
+    }, {
+      "id": 12432012,
+      "title": "227-VIII",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/91328D1.jpg",
+      "artist": "Wiggli, Oscar"
+    }, {
+      "id": 13812022,
+      "title": "Claire-voie n° 1",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/1308050006SC1.jpg",
+      "artist": "Richier, Germaine"
+    }, {
+      "id": 12292008,
+      "title": "Paule",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/89634D1.jpg",
+      "artist": "Chavaz, Albert"
+    }, {
+      "id": 9951522,
+      "title": "KOMPLEMENTÄR - THEMA II",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/56785DS2.jpg",
+      "artist": "Graeser, Camille Louis"
+    }, {
+      "id": 13759461,
+      "title": "Komplementär-Thema I",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/1303190005SC1.jpg",
+      "artist": "Graeser, Camille Louis"
+    }, {
+      "id": 12304242,
+      "title": "Lo squero (II)",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/90666D1.jpg",
+      "artist": "Bolzani, Giuseppe"
+    }, {
+      "id": 9605588,
+      "title": "Ohne title",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/75346C1.jpg",
+      "artist": "Sekula, Sonja"
+    }, {
+      "id": 9825576,
+      "title": "Ohne title",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/78415C1.jpg",
+      "artist": "Sekula, Sonja"
+    }, {
+      "id": 13298553,
+      "title": "Marina di Carrara",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/1202200005D1.jpg",
+      "artist": "Moser, Wilfrid"
+    }, {
+      "id": 13055129,
+      "title": "Blumenstillleben",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/1101140000DS2.jpg",
+      "artist": "Dietrich, Adolf"
+    }, {
+      "id": 11983881,
+      "title": "Ponts de Paris",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/88304D1.jpg",
+      "artist": "Beretta, Emilio Maria"
+    }, {
+      "id": 10123289,
+      "title": "Feindschaft",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/52849E1.jpg",
+      "artist": "Moos, Max von"
+    }, {
+      "id": 10123333,
+      "title": "ohne title",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/52991E1.jpg",
+      "artist": "Moos, Max von"
+    }, {
+      "id": 10118746,
+      "title": "Spuk",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/38136E1.jpg",
+      "artist": "Moos, Max von"
+    }, {
+      "id": 10703984,
+      "title": "Ohne title",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/83351E1.jpg",
+      "artist": "Moos, Max von"
+    }, {
+      "id": 12776762,
+      "title": "Résignation",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/94334D1.jpg",
+      "artist": "Aeppli, Eva"
+    }, {
+      "id": 12767815,
+      "title": "Fleurs blanches III",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/93804SC1.jpg",
+      "artist": "Aeppli, Eva"
+    }, {
+      "id": 13292336,
+      "title": "Ohne title, Kohlezeichnung vierteilig",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/1202130010D1.jpg",
+      "artist": "Aeppli, Eva"
+    }, {
+      "id": 12767809,
+      "title": "Mai",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/93803SC1.jpg",
+      "artist": "Aeppli, Eva"
+    }]
+  }, {
+    "title": {
+      "label": "Werke der selben Ausstellung(en)",
+      "value": "X Mas Schau"
+    },
+    "children": [{
+      "id": 9894840,
+      "title": "10 Minuten Plastik I",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/78924S1.jpg",
+      "artist": "Luginbühl, Bernhard",
+      "exhibitionDate": "1.12.1956",
+      "exhibitionVenue": "Bern",
+      "exhibitionTitle": "X Mas Schau"
+    }, {
+      "id": 9894900,
+      "title": "Kehrichtengel",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/78972E1.jpg",
+      "artist": "Luginbühl, Bernhard",
+      "exhibitionDate": "1.12.1956",
+      "exhibitionVenue": "Bern",
+      "exhibitionTitle": "X Mas Schau"
+    }]
+  }, {
+    "title": {
+      "label": "Besitzersammlung",
+      "value": "Museum zu Allerheiligen"
+    },
+    "children": [{
+      "id": 11680990,
+      "title": "Urbanomouth",
+      "year": 1971,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/87951CE1.jpg",
+      "artist": "Moser, Wilfrid",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, P 342"
+    }, {
+      "id": 9889026,
+      "title": "Der Rheinfall vom Zürcher Ufer aus",
+      "year": 1780,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/62557C1.jpg",
+      "artist": "Schalch, Johann (Jan) Jakob (Jacob)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, 568"
+    }, {
+      "id": 10024039,
+      "title": "Ein Reiter führt sein Pferd vor",
+      "year": 1770,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/19861C1.jpg",
+      "artist": "Schalch, Johann (Jan) Jakob (Jacob)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, 707"
+    }, {
+      "id": 9951111,
+      "title": "Bestrafung des kleinen Diebes",
+      "year": 1888,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/62563C1.jpg",
+      "artist": "Girardet, Léopold-Henri",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 9972899,
+      "title": "Entwurf für das Mittelfeld einer Scheibe mit einem Rheinschiff vor einer Stadt mit Anklängen an Schaffhausen",
+      "year": 1618,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23138S1.jpg",
+      "artist": "Kübler, Werlj (der Jüngere) > Kübler, Werner (Sohn, der Jüngere)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 13919383,
+      "title": "Bildscheibe mit der Parabel vom Stäbebrechen und dem Wappen Kaspar Kellers",
+      "year": 1607,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/1404020008D1.jpg",
+      "artist": "Kübler, Werlj (der Jüngere) > Kübler, Werner (Sohn, der Jüngere)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 9972924,
+      "title": "Entwurf für das Mittelfeld einer Scheibe mit allegorischer Darstellung (Der christliche Streiter)",
+      "year": 1615,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23232S1.jpg",
+      "artist": "Kübler, Werlj (der Jüngere) > Kübler, Werner (Sohn, der Jüngere)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 6002640,
+      "title": "Böckligumpen",
+      "year": 1866,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/62565C1.jpg",
+      "artist": "Anker, Albert",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 9884909,
+      "title": "Der blinde Belisar mit seinem jugendlichen Führer",
+      "year": 1859,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/64617S1.jpg",
+      "artist": "Oechslin, Johann Jakob (Jacob)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, P 225"
+    }, {
+      "id": 10006539,
+      "title": "Scheibenriss: Hase, von Hunden gestellt",
+      "year": 1574,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23231S1.jpg",
+      "artist": "Plepp, Hans Jakob (Johann Jakob)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, B 68"
+    }, {
+      "id": 12527977,
+      "title": "Abgrund",
+      "year": 2003,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/92254D1.jpg",
+      "artist": "Müller, Markus Augustinus > Müller, Markus",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 9937252,
+      "title": "Bildnis Johannes von Müller",
+      "year": 1797,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/62558C1.jpg",
+      "artist": "Diock, Felix Maria > Diogg, Felix Maria",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 10231367,
+      "title": "Fisch, Glas und Zitrone",
+      "year": 1926,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23287E1.jpg",
+      "artist": "Gubler, Max",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, Inv. 1489"
+    }, {
+      "id": 10245189,
+      "title": "Winterlandschaft",
+      "year": 1947,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/21876E1.jpg",
+      "artist": "Gubler, Max",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 10233622,
+      "title": "Mutter und Kind",
+      "year": 1932,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23294E1.jpg",
+      "artist": "Gubler, Max",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, Inv. 1517"
+    }, {
+      "id": 6001532,
+      "title": "Scheibenriss mit Salomons Abgötterei",
+      "year": 1571,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23120S1.jpg",
+      "artist": "Aman, Jos > Ammann, Jost (Jobst)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 12927026,
+      "title": "Ewiger Mantel",
+      "year": 1985,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/96511D1.jpg",
+      "artist": "Rippmann, Rosmarie > Vogt-Rippmann, Rosmarie",
+      "owner": "Museum zu Allerheiligen, Schaffhausen"
+    }, {
+      "id": 10006539,
+      "title": "Scheibenriss: Hase, von Hunden gestellt",
+      "year": 1574,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23231S1.jpg",
+      "artist": "Blepp, Hans Jakob > Plepp, Hans Jakob (Johann Jakob)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, B 68"
+    }, {
+      "id": 9888875,
+      "title": "Scheibenriss-Mittelfeld mit einem Gelehrten",
+      "year": 1620,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23155S1.jpg",
+      "artist": "Ringglli, Gotthard > Ringgli, Gotthard (Gotthardt, Gotthart)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, B 82"
+    }, {
+      "id": 10014778,
+      "title": "Fides",
+      "year": 1610,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/23249S1.jpg",
+      "artist": "Ringglli, Gotthard > Ringgli, Gotthard (Gotthardt, Gotthart)",
+      "owner": "Museum zu Allerheiligen, Schaffhausen, B 25"
+    }]
+  },  {
+    "title": {
+      "label": "Referenzierte Werke aus der Literatur",
+      "value": "X Mas Schau"
+    },
+    "children": [{
+      "id": 9894899,
+      "title": "10 Minuten Plastik II",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/78924T1.jpg",
+      "artist": "Luginbühl, Bernhard",
+      "literatur": "X Mas Schau"
+    }, {
+      "id": 9894998,
+      "title": "Kehrichtengel 2",
+      "year": 1956,
+      "url": "http://server1102.cs.technik.fhnw.ch/bilder/78972F1.jpg",
+      "artist": "Luginbühl, Bernhard",
+      "literatur": "X Mas Schau"
+    }]
+  }]
+};
+
+var w = 1200,
+    h = 800,
+    maxNodeSize = 100,
+    root;
+ 
+var vis;
+var force = d3.layout.force(); 
+
+vis = d3.select("body").append("svg");
+ 
+ 
+  root = data;
+  root.fixed = true;
+  root.x = w / 2;
+  root.y = 120;
+ 
+ 
+        // Build the arrow
+  var defs = vis.insert("svg:defs").selectAll("marker")
+      .data(["end"]);
+ 
+ 
+  defs.enter().append("svg:marker")
+      .attr("id", "end")               // As explained here: http://www.d3noob.org/2013/03/d3js-force-directed-graph-example-basic.html
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 10)
+      .attr("refY", 0)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+    .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+ 
+     update();
+ 
+ 
+/**
+ *   
+ */
+function update() {
+  var nodes = flatten(root),
+      links = d3.layout.tree().links(nodes);
+ 
+  // Restart the force layout.
+  force.nodes(nodes)
+        .links(links)
+        .gravity(0.05)
+        .charge(-1500)
+        .linkDistance(100)
+        .friction(0.5)
+        .linkStrength(function(l, i) {return 1; })
+        .size([w, h])
+        .on("tick", tick)
+        .start();
+ 
+   var path = vis.selectAll("path.link")
+      .data(links, function(d) { return d.target.id; });
+ 
+    path.enter().insert("svg:path")
+        .attr("class", "link")
+        .attr("marker-end", "url(#end)")
+        .style("stroke", "#ccc");
+ 
+ 
+  // Exit any old paths.
+  path.exit().remove();
+ 
+ 
+ 
+  // Update the nodes…
+  var node = vis.selectAll("g.node")
+      .data(nodes, function(d) { return d.id; });
+ 
+ 
+  // Enter any new nodes.
+  var nodeEnter = node.enter().append("svg:g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+  //    .on("click", click)
+      .call(force.drag);
+ 
+  // Append a circle
+  nodeEnter.append("svg:circle")
+      .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
+      .style("fill", color);
+
+
+  var img_height = 40;
+  var img_width = 40;
+
+  // Add text to the node (as defined by the json file) 
+  nodeEnter.append("svg:text")
+      .attr("text-anchor", "middle")
+      .attr("dx", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
+      .attr("dy", function(d) { return d.image ? img_height + 30 : 0.35; })
+      .attr("fill", "#CCC")
+      .text(function(d) { 
+        var title = typeof d.title === "string" ? undefined : ( d.title ? d.title.label : d.image.title );
+        return title; 
+      });
+ 
+ //Add an image to the node (if any)
+  
+  nodeEnter.append("svg:image")
+        .attr("xlink:href",  function(d) { return d.url ? d.url : ( d.image ? d.image.url : undefined ); })
+        .attr("x", function(d) { return d.image ? (0 - img_width) : (0 - (img_width/2)); })
+        .attr("y", function(d) { return d.image ? (0 - img_height) : (0 - (img_height/2)); })
+        .attr("height", function(d) { return d.image ? (img_height * 2) : img_height; })
+        .attr("width", function(d) { return d.image ? (img_width  * 2) : img_width; });
+ 
+ 
+ 
+  // Exit any old nodes.
+  node.exit().remove();
+ 
+ 
+  // Re-select for update.
+  path = vis.selectAll("path.link");
+  node = vis.selectAll("g.node");
+
+
+ 
+function tick() {
+ 
+  
+  path.attr("d", function(d) {
+ 
+     var dx = d.target.x - d.source.x,
+           dy = d.target.y - d.source.y,
+           dr = Math.sqrt(dx * dx + dy * dy);
+     return   "M" + d.source.x + "," 
+            + d.source.y + "," 
+            + "L" + d.target.x + "," 
+            + d.target.y;
+  });
+    
+  node.attr("transform", nodeTransform);    
+
+};
+ 
+ 
+/**
+ * Gives the coordinates of the border for keeping the nodes inside a frame
+ * http://bl.ocks.org/mbostock/1129492
+ */ 
+function nodeTransform(d) {
+    d.x =  Math.max(maxNodeSize, Math.min(w - 16, d.x));
+    d.y =  Math.max(maxNodeSize, Math.min(h - 16, d.y));
+    return "translate(" + d.x + "," + d.y + ")";
+};
+ 
+/**
+ * Color leaf nodes orange, and packages white or blue.
+ */ 
+function color(d) {
+  return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+};
+ 
+/**
+ * Toggle children on click.
+ */ 
+/*function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+ 
+  update();
+}*/
+ 
+ 
+/**
+ * Returns a list of all nodes under the root.
+ */ 
+function flatten(root) {
+  var nodes = []; 
+  var i = 0;
+
+  // if (root.categories) {
+  //   root.categories.forEach(function(cat) {
+  //     if (cat.children) {
+  //       cat.children.forEach(function(img){
+  //         img.id = ++i;
+  //         nodes.push(img);
+  //       })
+  //     }
+  //     cat.id = ++i;
+  //     nodes.push(cat);
+  //   });
+  // }
+  // root.id = ++i;
+  // nodes.push(root);
+  // console.log(nodes);
+
+  function recurse(node) {
+    if (node.children) 
+      node.children.forEach(recurse);
+    if (!node.id) 
+      node.id = ++i;
+    nodes.push(node);
+  }
+ 
+  recurse(root);
+  return nodes;
+}; 
+
+};  
+  
+</script>
+</body>
+</html>
