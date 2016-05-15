@@ -1,21 +1,25 @@
+<!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8" />
+  <head>
+    <title>SKIART - Collapse Tree Layout</title>
+  
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="tipsy.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="http://onehackoranother.com/projects/jquery/tipsy/stylesheets/tipsy.css" type="text/css" title="no title" charset="utf-8"/>
     
-<link href='http://fonts.googleapis.com/css?family=Life+Savers|Didact+Gothic' rel='stylesheet' type='text/css'>   
-<meta charset="utf-8" />
+  <link href='http://fonts.googleapis.com/css?family=Life+Savers|Didact+Gothic' rel='stylesheet' type='text/css'>   
+  <meta charset="utf-8" />
   
 <style>
-.body {
-  background: #000000;
-}
+
 .node {
   stroke: #009900;
   stroke-width: 1.5px;
   color: #009900;
  
 }
- 
+
  
 .node text {
   pointer-events: none;
@@ -48,8 +52,7 @@ line {
 }
 
 svg {
-  color: #CCC;
-  background: #000;
+  background: #151515;
   width: 1200px;
   height: 800px;
 }
@@ -876,7 +879,7 @@ function update() {
     path.enter().insert("svg:path")
         .attr("class", "link")
         .attr("marker-end", "url(#end)")
-        .style("stroke", "#ccc");
+        .style("stroke", "#666");
  
  
   // Exit any old paths.
@@ -909,10 +912,10 @@ function update() {
   nodeEnter.append("svg:text")
       .attr("text-anchor", "middle")
       .attr("dx", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
-      .attr("dy", function(d) { return d.image ? img_height + 30 : 0.35; })
+      .attr("dy", function(d) { return d.image ? img_height * 2 + 30 : 0.35; })
       .attr("fill", "#CCC")
       .text(function(d) { 
-        var title = typeof d.title === "string" ? undefined : ( d.title ? d.title.label : d.image.title );
+        var title = typeof d.title === "string" ? undefined : ( d.title ? d.title.label + " " + d.title.value : d.image.title + ", " + d.image.description);
         return title; 
       });
  
@@ -920,12 +923,30 @@ function update() {
   
   nodeEnter.append("svg:image")
         .attr("xlink:href",  function(d) { return d.url ? d.url : ( d.image ? d.image.url : undefined ); })
-        .attr("x", function(d) { return d.image ? (0 - img_width) : (0 - (img_width/2)); })
-        .attr("y", function(d) { return d.image ? (0 - img_height) : (0 - (img_height/2)); })
-        .attr("height", function(d) { return d.image ? (img_height * 2) : img_height; })
-        .attr("width", function(d) { return d.image ? (img_width  * 2) : img_width; });
+        .attr("x", function(d) { return d.image ? (0 - img_width * 2) : (0 - (img_width/2)); })
+        .attr("y", function(d) { return d.image ? (0 - img_height * 2) : (0 - (img_height/2)); })
+        .attr("height", function(d) { return d.image ? (img_height * 4) : img_height; })
+        .attr("width", function(d) { return d.image ? (img_width  * 4) : img_width; });
  
  
+// tooltips (using jQuery plugin tipsy)
+  nodeEnter.append("title")
+      .text(function(d) { 
+
+        var tooltipText = ""
+        tooltipText += d.title ? d.title + ", " : "";
+        tooltipText += d.year ? d.year + ", " : "";
+        tooltipText += d.artist ? d.artist + ", " : "";
+        
+        return tooltipText;
+        
+      })
+
+  $(".node").tipsy({ gravity: 's', });
+
+  // run the mouseon/out functions
+  //nodeEnter.on("mouseover", mouseOn);
+  //nodeEnter.on("mouseout", mouseOff);
  
   // Exit any old nodes.
   node.exit().remove();
@@ -973,21 +994,6 @@ function color(d) {
   return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
 };
  
-/**
- * Toggle children on click.
- */ 
-/*function click(d) {
-  if (d.children) {
-    d._children = d.children;
-    d.children = null;
-  } else {
-    d.children = d._children;
-    d._children = null;
-  }
- 
-  update();
-}*/
- 
  
 /**
  * Returns a list of all nodes under the root.
@@ -995,22 +1001,6 @@ function color(d) {
 function flatten(root) {
   var nodes = []; 
   var i = 0;
-
-  // if (root.categories) {
-  //   root.categories.forEach(function(cat) {
-  //     if (cat.children) {
-  //       cat.children.forEach(function(img){
-  //         img.id = ++i;
-  //         nodes.push(img);
-  //       })
-  //     }
-  //     cat.id = ++i;
-  //     nodes.push(cat);
-  //   });
-  // }
-  // root.id = ++i;
-  // nodes.push(root);
-  // console.log(nodes);
 
   function recurse(node) {
     if (node.children) 
