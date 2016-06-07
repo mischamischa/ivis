@@ -56,6 +56,7 @@ var width = 1000;
 var height = 1000;
 
 var s = Snap('#graph');
+var paper = s.paper;
 
 var params = $_GET();
 
@@ -81,6 +82,9 @@ for(var i=0; i < params.length; i++) {
   alpha += delta;
 }
 
+// Image
+var img = paper.image('img/0_jodeln.jpg',width/2,height/2);
+img.scale(0.2,0.2);
 
 function $_GET() {
   var vars = [];
