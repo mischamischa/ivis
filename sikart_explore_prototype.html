@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SKIART - Explore (Prototype)</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="snap.svg-min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="tipsy.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="http://onehackoranother.com/projects/jquery/tipsy/stylesheets/tipsy.css" type="text/css" title="no title" charset="utf-8"/>
+    
+  <link href='http://fonts.googleapis.com/css?family=Life+Savers|Didact+Gothic' rel='stylesheet' type='text/css'>   
+  <meta charset="utf-8" />
+  
+<style>
+
+body {
+  background: #ffffff;
+  color: #1e1e1e;
+}
+.primaryColor {
+  color: #ffffff;
+}
+.primaryBg {
+  background: #ea0f89;
+}
+.accentColor {
+  color: #ea0f89;
+}
+.circleBg {
+  background: #f9f9f9;
+}
+
+#graph {
+  width: 800px;
+  height: 660px;
+}
+
+</style>
+
+
+<link href='http://fonts.googleapis.com/css?family=Life+Savers|Didact+Gothic' rel='stylesheet' type='text/css'>
+    
+</head>
+<body>
+  <div class="content">
+    <svg id="graph">
+    </svg>
+  </div>
+</div>
+<script>
+var width = 800;
+var height = 660;
+var s = Snap('#graph');
+
+var params = $_GET();
+var x=100, y=100;
+var radius=80;
+var horiz = true;
+
+// Iteration through search parameter
+for(var i=0; i < params.length; i++) {
+  var crcl = s.circle(x,y,radius);
+  crcl.attr({
+    fill: '#f9f9f9',
+    strokeWidth: 0  ,
+  });
+  x = horiz ? width - x : x;
+  y = horiz ? y : height - y ;
+  horiz = !horiz;
+}
+
+
+function $_GET() {
+  var vars = [];
+  window.location.href.replace( location.hash, '' ).replace( 
+    /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+    function( m, key, value ) { // callback
+      if (key === 'tags') {
+        vars.push(value !== undefined ? value : '');
+      } 
+    }
+  );
+  return vars;
+}
+  
+</script>
+</body>
+</html>
