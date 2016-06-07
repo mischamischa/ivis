@@ -1,0 +1,34 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.image{
+}
+img {
+    overflow: hidden;
+}
+
+.button-div {
+    float: left;
+    position: absolute;
+    height: 26px;
+    width: 80px;
+    left: 54px;
+    top: 356px;
+    background-color:rgba(255,0,0,0);
+}
+input {
+
+    float: left;
+    position: absolute;
+    height: 32px;
+    width: 571px;
+    left: 127px;
+    top: 10px;
+    padding-left: 10px;
+    boarder: 0;
+    background-color:rgba(255,255,255,0);
+    font-size: 16px;
+
+}
