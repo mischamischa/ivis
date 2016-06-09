@@ -3,14 +3,13 @@
   <head>
     <title>SKIART - Explore (Prototype)</title>
   
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="utf-8" />
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta charset='utf-8' />
   
-  <script src="js/jquery-2.2.4.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="js/snap.svg-min.js" type="text/javascript" charset="utf-8"></script>
-    
+  <script src='js/jquery-2.2.4.min.js' type='text/javascript' charset='utf-8'></script>
+  <script src='js/snap.svg-min.js' type='text/javascript' charset='utf-8'></script>
+  <script src='js/d3.min.js' type='text/javascript' charset='utf-8'></script>
 <style>
-
 body {
   background: #ffffff;
   color: #1e1e1e;
@@ -38,160 +37,411 @@ body {
     
 </head>
 <body>
-  <div class="content">
-    <svg id="graph">
+  <div class='content'>
+    <svg id='graph'>
     </svg>
   </div>
 </div>
+<script src='data/tag_data.js' type='text/javascript' charset='utf-8'></script>
 <script>
 var cW = 600;
 var cH = 500;
 var cR = 150;
 
+
+
 var s = Snap('#graph');
 var params = $_GET();
 
+// Radius & Angle
+var er=(cH-cR)/2.2;
+var delta= 7 / 4 * Math.PI / (params.length);
+var alpha = Math.PI / 3.5;
+var minDim = cR / 8;
+var maxDim = cR / 4;
+
+// Center Image Settings
+var imgB = 4;
+
+// Build graph
+var svg =  d3.select('#graph');
 
 createGraph();
 
+
 function createGraph() {
 
-  s.clear();
-
-  // Radius & Angle
-  var er=(cH-cR)/2.2;
-  var delta= 2*Math.PI / (params.length);
-  var alpha = Math.PI / 3.5;
-
-  // Center Image Settings
-  var imgW = 204;
-  var imgH = 136
-  var imgB = 4;
-
-  var bX = cW - imgW/2;
-  var bY = cH + imgH/2 + 15;
-
-  // Iteration through search parameter
-  for(var i=0; i < params.length; i++) {
-    var x = cW + 2.5 * Math.sin(alpha) * er;
-    var y = cH + 2.2 * Math.cos(alpha) * er;
-    
-    // Circle
-    var crcl = s.circle(x,y,cR);
-    crcl.attr({
-      fill: '#e9e9e9',
-      strokeWidth: 0 
-    });
-
-    // Line
-    var line = s.line(x,y,cW,cH);
-    line.attr({
-      stroke: '#e9e9e9',
-      strokeWidth: 2
-    })
-
-    // Text Boxes
-    var lX = cW + (x-cW) / 2.1;
-    var lY = cH + (y-cH) / 2.1;
-    
-    var block = s.rect(lX - 50, lY - 15, 100, 40, 4);
-    
-    block.attr({
-      fill: '#ffffff',
-      stroke: "#e9e9e9",
-      strokeWidth: 2
-    });
-    
-    var text = s.text(lX, lY, params[i]);
-    text.attr({
-        'font-size': '1em',
-        x: lX - (text.node.clientWidth/2) - 10,
-        y: lY + (text.node.clientHeight/2),
-    });
-
-    block.attr({
-        width: (text.node.clientWidth + 50),
-        x: lX - (text.node.clientWidth + 50) / 2
-    });
-
-
-    // Text Tags
-    bY = (bX + text.node.clientWidth + 30 > cW + imgW/2 ) ? bY + 23 : bY;
-    if (bX + text.node.clientWidth + 30 > cW + imgW/2 ){
-      bX = cW - imgW/2;
-    } 
-    console.log(bY);
-
-    var block = s.rect(bX, bY, 100, 20, 4);
-    
-    block.attr({
-      fill: '#ea0f89',
-      strokeWidth: 0
-    });
-    
-    var text = s.text(bX + 25, bY, params[i]);
-    text.attr({
-        'font-size': '0.7em',
-        fill: '#ffffff',
-        y: bY + (text.node.clientHeight/1.4),
-    });
-
-    var l1 = s.line(bX + 8, bY + 6, bX + 16, bY + 14 );
-    var l2 = s.line(bX + 8, bY + 14, bX + 16, bY + 6 );
-    var close = s.g(l1, l2);
-    close
-    .attr({
-      stroke: '#ffffff',
-      strokeWidth: 2
-    })
-    .click(function() {
-      var ix = params.indexOf(this.node.parentNode.childNodes[1].textContent);
-      params.splice(ix,1);
-      console.log(params);
-      createGraph();
-    });
-
-    block.attr({
-        width: text.node.clientWidth + 30,
-    });
-
-    s.g(block, text, close);
-
-    if (bX + block.node.width.baseVal.value <= cW + imgW/2 ){
-      bX += block.node.width.baseVal.value + 5;
-    }
-
-    // Extend angle
-    alpha += delta;
+  var x = function(i) {
+    return cW + 2.5 * Math.sin(i * delta + alpha) * er;
+  };
+  var y = function(i) {
+    return cH + 2.2 * Math.cos(i * delta + alpha) * er;
   }
 
-  // Center Image
-  var rect = s.rect(cW-imgW/2-imgB, cH-imgH/2-imgB, imgW+imgB*2, imgH+imgB*2, imgB)
+  var cloud = svg.selectAll('g')
+    .data(params)
+    .enter()
+    .append('g')
+
+  var circle = cloud.append('circle')
+    .attr('cx', function (d, i) { return x(i) })
+    .attr('cy', function (d, i) { return y(i) })  
+    .attr('r', cR )
+    .style({fill: '#e9e9e9', strokeWidth: '0px'});
+
+  var circleArea = circle.append('g');
+  circleArea.each(function(d, i) {
+    d.images.forEach(function(image) {
+
+      var cloudImg = circle.append('image')
+          .attr('image-rendering','optimizeQuality');
+    
+      //Load image and get size.
+      var img = new Image();
+      img.onload = function() {
+        var imgW = this.width / 20;
+        var imgH = this.height / 20;
+        var xImg = x(i);
+        var yImg = y(i);
+        
+        cloudImg 
+         .attr('width', imgW)
+         .attr('height', imgH)
+         .attr('x', xImg)
+         .attr('y', yImg)
+         .attr('xlink:href', image.url);
+
+        cloudImg.insert('rect', ':first-child')
+          .attr('width', imgW + 2 * imgB)
+          .attr('height', imgH + 2 * imgB)
+          .attr('x', xImg - imgB)
+          .attr('y', yImg - imgB)
+          .attr('rx', 4)
+          .attr('ry', 4)
+          .attr({
+            fill: '#ffffff',
+            stroke: '#e9e9e9',
+            'stroke-width': 2
+          });
+        };
+        img.src = image.url;
+      });
+    });
+ 
+
+
+
+      // .append('image')
+      //   .attr('image-rendering','optimizeQuality')
+      //   .attr('id', function(d) { return d.url.substring(4,9) })
+      //   .attr('x', function (d, i) { return x(i) })
+      //   .attr('y', function (d, i) { return y(i) })  
+      //   .on('load', function(d) {
+      //     var myImage = new Image();
+      //     myImage.onload = function() {
+      //         cloudImg.select('#' + d.url.substring(4,9))
+      //           .attr('xlink:href', d.url)
+      //           .attr("width", this.width/20)
+      //           .attr("height", this.height/20);
+      //     }
+      //     myImage.src = d.url;
+      //   });
+
+
+  cloud.append('line')
+    .attr('x1', function(d, i) { return x(i); })
+    .attr('y1', function (d, i) { return y(i); })  
+    .attr('x2', cW)
+    .attr('y2', cH)
+    .attr({
+      stroke: '#e9e9e9',
+      'stroke-width': 2
+    });
+
+  var cloudText = cloud.append('g');
+  cloudText.append('text')
+      .text( function (d) { return d.name; })
+      .attr({ 
+        'font-family': 'sans-serif',
+        'font-size': '1em'
+      })
+      .attr('x', function(d, i) { return cW + (x(i) - cW) / 2.1 - (this.getBBox().width/2); })
+      .attr('y', function(d, i) { return cH + (y(i) - cH) / 2.1 + (this.getBBox().height/2); })
+      .each(function(d) { 
+        d.width = this.getBBox().width;
+      });
+
+  cloudText.insert('rect', ':first-child')
+      .attr('x', function(d, i) { return cW + (x(i) - cW) / 2.1 - (d.width + 50) / 2; })
+      .attr('y', function(d, i) { return cH + (y(i) - cH) / 2.1 - 15; })
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .attr('width', function(d) { return d.width + 50 })
+      .attr('height', 40)
+      .attr({
+        fill: '#ffffff',
+        stroke: '#e9e9e9',
+        'stroke-width': 1
+      });
+
+  // Center Image and Search
+  var center = svg.append('g');
+
+  var centerImg =  center.append('image')
+    .attr('image-rendering','optimizeQuality');
+
+  //Load image and get size.
+  var img = new Image();
+  img.src = 'img/0_jodeln.jpg';
+  img.onload = function() {
+    var imgW = this.width / 10;
+    var imgH = this.height / 10;
+    var xImg = cW - imgW / 2;
+    var yImg = cH - imgH / 2;
+    
+    centerImg 
+     .attr('width', imgW)
+     .attr('height', imgH)
+     .attr('x', xImg)
+     .attr('y', yImg)
+     .attr('xlink:href', 'img/0_jodeln.jpg');
+
+    center.insert('rect', ':first-child')
+      .attr('width', imgW + 2 * imgB)
+      .attr('height', imgH + 2 * imgB)
+      .attr('x', xImg - imgB)
+      .attr('y', yImg - imgB)
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .attr({
+        fill: '#ffffff',
+        stroke: '#e9e9e9',
+        'stroke-width': 2
+      });
+
+    // Add Tags
+    var bX = cW - imgW/2;
+    var bY = cH + imgH/2 + 15;
+    var textW = 0;
+
+    tags.forEach(function(tag) {
+
+      // Text Tags
+      var centerText = center.append('g')
+        .attr('id', tag.id);
+
+      centerText.append('text')
+        .text( tag.name )
+        .attr({ 
+          'font-family': 'sans-serif',
+          'font-size': '0.7em',
+          'fill': '#ffffff'
+        })
+        .attr('x', function() {
+          textW = this.getBBox().width;
+          if (bX + textW + 30 > cW + imgW/2 ){
+            bX = cW - imgW/2;
+            bY = bY + 23;
+          }
+          return bX + 25;
+        })
+        .attr('y', function() { return bY + this.getBBox().height/1.1 });
+
+      var close = centerText.append('g')
+        .attr({
+          stroke: '#ffffff',
+          'stroke-width': 2
+        })
+        // .onClick(function() {
+        //   var ix = params.indexOf(tag.name);
+        //   params.splice(ix,1);
+        //   createGraph();
+        // })
+
+      close.append('line')
+        .attr('x1', bX + 8)
+        .attr('y1', bY + 6)
+        .attr('x2', bX + 16)
+        .attr('y2', bY + 14);
+      close.append('line')
+        .attr('x1', bX + 8)
+        .attr('y1', bY + 14)
+        .attr('x2', bX + 16)
+        .attr('y2', bY + 6);
+
+      centerText.insert('rect', ':first-child')
+        .attr('x', bX)
+        .attr('y', bY)
+        .attr('rx', 4)
+        .attr('ry', 4)
+        .attr('width', textW + 30)
+        .attr('height', 20)
+        .attr({
+          fill: '#ea0f89',
+          strokeWidth: 0
+        });
+
+      if (bX + textW + 30 <= cW + imgW/2 ){
+        bX += textW + 35;
+      }
+    });
+  }
+  
+
+
+
+  // *******************************************************
+  // s.clear()
+
+  // // Iteration through search parameter
+  // for(var i=0; i < params.length; i++) {
+  //   var x = cW + 2.5 * Math.sin(alpha) * er;
+  //   var y = cH + 2.2 * Math.cos(alpha) * er;
+    
+  //   // Circle
+  //   var crcl = s.circle(x,y,cR);
+  //   crcl.attr({
+  //     fill: '#e9e9e9',
+  //     strokeWidth: 0 
+  //   });
+
+  //   // Line
+  //   var line = s.line(x,y,cW,cH);
+  //   line.attr({
+  //     stroke: '#e9e9e9',
+  //     strokeWidth: 2
+  //   })
+
+        // var tag = tags.find(function(tagItem) {
+        //   return tagItem.name.toLowerCase() === value.toLowerCase();
+        // });
+   
+        // if (tag) {
+        //   tag.images.forEach(function(img) {
+        //     createImage(x,y,img.url);
+        //   });
+        // }
+
+  //   // Text Boxes
+  //   var lX = cW + (x-cW) / 2.1;
+  //   var lY = cH + (y-cH) / 2.1;
+    
+  //   var block = s.rect(lX - 50, lY - 15, 100, 40, 4);
+    
+  //   block.attr({
+  //     fill: '#ffffff',
+  //     stroke: '#e9e9e9',
+  //     strokeWidth: 2
+  //   });
+    
+  //   var text = s.text(lX, lY, params[i]);
+  //   text.attr({
+  //       'font-size': '1em',
+  //       x: lX - (text.node.clientWidth/2) - 10,
+  //       y: lY + (text.node.clientHeight/2),
+  //   });
+
+  //   block.attr({
+  //       width: (text.node.clientWidth + 50),
+  //       x: lX - (text.node.clientWidth + 50) / 2
+  //   });
+
+
+  //   // Text Tags
+  //   bY = (bX + text.node.clientWidth + 30 > cW + imgW/2 ) ? bY + 23 : bY;
+  //   if (bX + text.node.clientWidth + 30 > cW + imgW/2 ){
+  //     bX = cW - imgW/2;
+  //   } 
+
+  //   var block = s.rect(bX, bY, 100, 20, 4);
+    
+  //   block.attr({
+  //     fill: '#ea0f89',
+  //     strokeWidth: 0
+  //   });
+    
+  //   var text = s.text(bX + 25, bY, params[i]);
+  //   text.attr({
+  //       'font-size': '0.7em',
+  //       fill: '#ffffff',
+  //       y: bY + (text.node.clientHeight/1.4),
+  //   });
+
+  //   var l1 = s.line(bX + 8, bY + 6, bX + 16, bY + 14 );
+  //   var l2 = s.line(bX + 8, bY + 14, bX + 16, bY + 6 );
+  //   var close = s.g(l1, l2);
+  //   close
+  //   .attr({
+  //     stroke: '#ffffff',
+  //     strokeWidth: 2
+  //   })
+  //   .click(function() {
+  //     var ix = params.indexOf(this.node.parentNode.childNodes[1].textContent);
+  //     params.splice(ix,1);
+  //     createGraph();
+  //   });
+
+  //   block.attr({
+  //       width: text.node.clientWidth + 30,
+  //   });
+
+  //   s.g(block, text, close);
+
+  //   if (bX + block.node.width.baseVal.value <= cW + imgW/2 ){
+  //     bX += block.node.width.baseVal.value + 5;
+  //   }
+
+  //   // Extend angle
+  //   alpha += delta;
+  // }
+
+  // // Center Image
+  // var rect = s.rect(cW-imgW/2-imgB, cH-imgH/2-imgB, imgW+imgB*2, imgH+imgB*2, imgB)
+  // rect.attr({
+  //   stroke: '#e9e9e9',
+  //   strokeWidth: 2,
+  //   'fill-opacity': 0  
+  // });
+  // var imgMask = s.rect(cW-imgW/2,cH-imgH/2,imgW,imgH,2);
+  // imgMask.attr({
+  //   fill: '#fff'
+  // });
+  // var img = s.image('img/0_jodeln.jpg',cW-imgW/2,cH-imgH/2,imgW,imgH);
+  // img.attr({
+  //   mask: imgMask
+  // });
+
+  // Search Field
+  // *******************************************************
+}
+
+function createImage(x,y, url) {
+  var xC = x - (maxDim );
+  var yC = y - (maxDim );
+  var rImg = (cR - maxDim - 20) * Math.random();
+  var aImg = Math.PI * 2 * Math.random();
+  
+
+  var imgW = 0.1 + Math.random() * (0.2);
+  
+
+  var xImg = xC + rImg * Math.sin(aImg);
+  var yImg = yC + rImg * Math.cos(aImg);
+
+
+  var rect = s.rect(xImg,yImg, imgW+imgB*2, imgH+imgB*2, imgB)
   rect.attr({
     stroke: '#e9e9e9',
     strokeWidth: 2,
-    'fill-opacity': 0  
+    'fill-opacity': 0.3  
   });
   var imgMask = s.rect(cW-imgW/2,cH-imgH/2,imgW,imgH,2);
   imgMask.attr({
     fill: '#fff'
   });
-  var img = s.image('img/0_jodeln.jpg',cW-imgW/2,cH-imgH/2,imgW,imgH);
-  img.attr({
-    mask: imgMask
-  });
-
-  // Search Field
-
-}
-
-function getCloseIcon(color) {
-  var p_line1 = s.paper.line(0,0, 8,8).attr({stroke: color});
-  var p_line2 = s.paper.line(8,0, 0,8).attr({stroke: color});
-
-  var icon = s.paper.g(p_line1, p_line2).pattern(0,0, 8,8); 
-
-  return icon;
+  var img = s.image(url,xImg,yImg); 
+  img.transform('s' + imgW);
+    
 }
 
 function $_GET() {
@@ -200,7 +450,13 @@ function $_GET() {
     /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
     function( m, key, value ) { // callback
       if (key === 'tags') {
-        vars.push(value !== undefined ? value : '');
+        var tag = tags.find(function(tagItem) {
+          return tagItem.name.toLowerCase() === value.toLowerCase();
+        });
+   
+        if (tag) {
+          vars.push(tag);
+        }
       } 
     }
   );
