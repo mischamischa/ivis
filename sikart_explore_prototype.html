@@ -37,9 +37,7 @@ body {
     
 </head>
 <body>
-  <div class='content'>
-    <svg id='graph'>
-    </svg>
+  <div id='content'>
   </div>
 </div>
 <script src='data/tag_data.js' type='text/javascript' charset='utf-8'></script>
@@ -55,7 +53,6 @@ var params = $_GET();
 
 // Radius & Angle
 var er=(cH-cR)/2.2;
-var delta= 7 / 4 * Math.PI / (params.length);
 var alpha = Math.PI / 3.5;
 var minDim = cR / 8;
 var maxDim = cR / 4;
@@ -64,12 +61,18 @@ var maxDim = cR / 4;
 var imgB = 4;
 
 // Build graph
-var svg =  d3.select('#graph');
+var content =  d3.select('#content');
 
-createGraph();
+createGraph(params);
 
 
-function createGraph() {
+function createGraph(data) {
+
+  content.selectAll('*').remove();
+  var svg = content.append('svg')
+    .attr('id', 'graph');
+
+  var delta= 7 / 4 * Math.PI / (data.length);
 
   var x = function(i) {
     return cW + 2.5 * Math.sin(i * delta + alpha) * er;
@@ -79,7 +82,7 @@ function createGraph() {
   }
 
   var clouds = svg.selectAll('g')
-    .data(params)
+    .data(data)
     .enter()
       .append('g');
 
@@ -129,7 +132,7 @@ function createGraph() {
   var cloudImg = clouds.selectAll('.cloud')
     .data(function(d, i) {
       return d.images.map(function (image) {
-        return { image: image, i: i };
+        return { image: image, i: i, count: d.images.length };
       });
     })
     .enter()
@@ -142,14 +145,15 @@ function createGraph() {
         //Load image and get size.
           var img = new Image();
           img.onload = function() {
-            var imgA = Math.PI * 2 * Math.random();
-            var imgS = 0.1 + Math.random() * (0.2);
-            var imgR = (cR - maxDim - 20) * Math.random();
+            var imgA = Math.PI * Math.random() + Math.PI * (Math.floor(2*i/d.count));
+            var imgS = 0.1 + Math.random() * (0.18);
+            var imgR = (cR - maxDim - 22) * Math.random();
 
             var imgW = this.width * imgS;
             var imgH = this.height * imgS;
             var xImg = x(d.i) - maxDim + imgR * Math.sin(imgA);
             var yImg = y(d.i) - maxDim + imgR * Math.cos(imgA);
+
             
             var image = svg.select('#image' + d.i + "-" + i );
             image.append('image')
@@ -215,7 +219,7 @@ function createGraph() {
     var bY = cH + imgH/2 + 15;
     var textW = 0;
 
-    tags.forEach(function(tag) {
+    data.forEach(function(tag, ix) {
 
       // Text Tags
       var centerText = center.append('g')
@@ -243,11 +247,12 @@ function createGraph() {
           stroke: '#ffffff',
           'stroke-width': 2
         })
-        // .onClick(function() {
-        //   var ix = params.indexOf(tag.name);
-        //   params.splice(ix,1);
-        //   createGraph();
-        // })
+        .on("click", function(){
+          //var ix = params.indexOf(tag.name);
+          params.splice(ix,1);
+
+          createGraph(params);
+        })
 
       close.append('line')
         .attr('x1', bX + 8)
@@ -437,17 +442,13 @@ function createImage(x,y, url) {
 
 function $_GET() {
   var vars = [];
+  var ix = 0;
   window.location.href.replace( location.hash, '' ).replace( 
     /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
     function( m, key, value ) { // callback
-      if (key === 'tags') {
-        var tag = tags.find(function(tagItem) {
-          return tagItem.name.toLowerCase() === value.toLowerCase();
-        });
-   
-        if (tag) {
-          vars.push(tag);
-        }
+      if (key === 'tags' && ix < tags.length) {
+        vars.push(tags[ix]);
+        ix++;
       } 
     }
   );
