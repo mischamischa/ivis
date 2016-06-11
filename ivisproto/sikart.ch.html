@@ -6,8 +6,8 @@
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <meta charset='utf-8' />
   
-  <script src='js/jquery-2.2.4.min.js' type='text/javascript' charset='utf-8'></script>
-  <script src='js/d3.min.js' type='text/javascript' charset='utf-8'></script>
+  <script src='../js/jquery-2.2.4.min.js' type='text/javascript' charset='utf-8'></script>
+  <script src='../js/d3.min.js' type='text/javascript' charset='utf-8'></script>
 <style>
 body {
   background: #ffffff;
@@ -32,12 +32,44 @@ body {
   border: 1px solid #f9f9f9;
 }
 
+.header {
+  position: absolute;
+  width: 100%
+}
+.container {
+  position: absolute;
+  top: 200px;
+  width: 100%;
+}
+.top {
+  top: 240px;
+}
+.center {
+  display: block;
+  margin: auto;
+}
+
+
+.link {
+  margin-top: 40px;
+  padding-left: 740px;
+}
+
 </style>
     
 </head>
 <body>
-  <div id='content'>
+<div class="header">
+  <img class="center" src="img/sikart.jpg">
+</div>
+
+  <div class="container" style="text-align:center;" id='content'>
   </div>
+</div>
+<div class="container top" style="text-align:center;">
+  <a class="link" href="google.ch.html">
+    <img src="img/explorer.jpg" width="130px"/>
+  </a>
 </div>
 <script src='data/tag_data.js' type='text/javascript' charset='utf-8'></script>
 <script>
@@ -47,6 +79,7 @@ var cR = 150;
 
 
 var params = $_GET();
+var free_params = $_GET();
 
 // Radius & Angle
 var er=(cH-cR)/2.2;
@@ -59,15 +92,16 @@ var imgB = 4;
 
 // Build graph
 var content =  d3.select('#content');
-
+    
 createGraph(params);
 
 
 function createGraph(data) {
 
-  content.selectAll('*').remove();
+  content.select('#graph').remove();
   var svg = content.append('svg')
-    .attr('id', 'graph');
+    .attr('id', 'graph')
+
 
   var delta= 7 / 4 * Math.PI / (data.length);
 
@@ -211,9 +245,28 @@ function createGraph(data) {
         'stroke-width': 2
       });
 
+    // Add Search field
+    center.append('foreignObject')
+      .attr('width', imgW)
+      .attr('height', 20)
+      .attr('x', xImg)
+      .attr('y', cH + imgH/2 + 15)
+      .append('xhtml:input')
+        .attr('id', 'input-tag')
+        .attr('style', 'width: ' + (imgW - imgB ) + 'px;')
+        .attr({ 
+          'font-family': 'sans-serif',
+          'font-size': '1.5em',
+          'fill': '#000000'
+        })
+        .attr('type', 'text')
+        .attr('value', '')
+        .attr('onkeyup', 'setTag(event)')
+
+
     // Add Tags
     var bX = cW - imgW/2;
-    var bY = cH + imgH/2 + 15;
+    var bY = cH + imgH/2 + 45;
     var textW = 0;
 
     data.forEach(function(tag, ix) {
@@ -246,7 +299,7 @@ function createGraph(data) {
         })
         .on("click", function(){
           //var ix = params.indexOf(tag.name);
-          params.splice(ix,1);
+          free_params.push(params.splice(ix,1)[0]);
 
           createGraph(params);
         })
@@ -280,7 +333,20 @@ function createGraph(data) {
     });
   }
 } 
-  
+
+function setTag(e) {
+  if (e.keyCode === 9 || e.keyCode === 13 || e.keyCode === 32) {
+    if ($('#input-tag').val().length > 3) { 
+      if (free_params.length > 0) {
+        var tag = free_params.pop();
+        tag.name = $('#input-tag').val();
+        params.push(tag);
+      }
+      $('#input-tag').val('');
+      createGraph(params);
+    }
+  }
+} 
 
 function $_GET() {
   var vars = [];

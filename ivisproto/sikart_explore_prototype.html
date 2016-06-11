@@ -61,8 +61,11 @@ var imgB = 4;
 var content =  d3.select('#content');
 content.append('a')
   .attr('xLink:href', 'google.ch.html')
-  .append('image')
-    .attr('xLink:href', 'img/explorer.jpg');
+  .append('img')
+    .attr('src', 'img/explorer.jpg')
+    .attr('width', 100)
+    .attr('x', 10)
+    .attr('y', 30);
 
 
 createGraph(params);
@@ -70,7 +73,7 @@ createGraph(params);
 
 function createGraph(data) {
 
-  content.selectAll('*').remove();
+  content.select('#graph').remove();
   var svg = content.append('svg')
     .attr('id', 'graph');
 

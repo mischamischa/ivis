@@ -4,14 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Google</title>
+    <script src='js/jquery-2.2.4.min.js' type='text/javascript' charset='utf-8'></script>
 </head>
 <body>
-<a href="https://www.google.com"><div class="button-div"></div></a>
+<a id="explorer"><div class="button-div"></div></a>
 
-<input type="text">
+<input type="text" id="tags" value="jodler berge hellblau gotthard">
 
     <div class="image">
         <img src="img/Artboard.png">
     </div>
+<script>
+
+$( document ).ready(function() {
+  $('#explorer').click(function() {
+    var tags = $('#tags').val().split(' ');
+    var params = "?";
+    tags.forEach(function(tag) {
+      params += "tags=" + tag + "&";
+    });
+    params = params.slice(0,-1);
+    window.location = 'sikart.ch.html' + params;
+  });
+});
+
+
+</script>
 </body>
 </html>
