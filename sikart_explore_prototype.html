@@ -78,77 +78,19 @@ function createGraph() {
     return cH + 2.2 * Math.cos(i * delta + alpha) * er;
   }
 
-  var cloud = svg.selectAll('g')
+  var clouds = svg.selectAll('g')
     .data(params)
     .enter()
-    .append('g')
+      .append('g');
 
-  var circle = cloud.append('circle')
+  clouds.append('circle')
     .attr('cx', function (d, i) { return x(i) })
     .attr('cy', function (d, i) { return y(i) })  
     .attr('r', cR )
     .style({fill: '#e9e9e9', strokeWidth: '0px'});
 
-  var circleArea = circle.append('g');
-  circleArea.each(function(d, i) {
-    d.images.forEach(function(image) {
 
-      var cloudImg = circle.append('image')
-          .attr('image-rendering','optimizeQuality');
-    
-      //Load image and get size.
-      var img = new Image();
-      img.onload = function() {
-        var imgW = this.width / 20;
-        var imgH = this.height / 20;
-        var xImg = x(i);
-        var yImg = y(i);
-        
-        cloudImg 
-         .attr('width', imgW)
-         .attr('height', imgH)
-         .attr('x', xImg)
-         .attr('y', yImg)
-         .attr('xlink:href', image.url);
-
-        cloudImg.insert('rect', ':first-child')
-          .attr('width', imgW + 2 * imgB)
-          .attr('height', imgH + 2 * imgB)
-          .attr('x', xImg - imgB)
-          .attr('y', yImg - imgB)
-          .attr('rx', 4)
-          .attr('ry', 4)
-          .attr({
-            fill: '#ffffff',
-            stroke: '#e9e9e9',
-            'stroke-width': 2
-          });
-        };
-        img.src = image.url;
-      });
-    });
- 
-
-
-
-      // .append('image')
-      //   .attr('image-rendering','optimizeQuality')
-      //   .attr('id', function(d) { return d.url.substring(4,9) })
-      //   .attr('x', function (d, i) { return x(i) })
-      //   .attr('y', function (d, i) { return y(i) })  
-      //   .on('load', function(d) {
-      //     var myImage = new Image();
-      //     myImage.onload = function() {
-      //         cloudImg.select('#' + d.url.substring(4,9))
-      //           .attr('xlink:href', d.url)
-      //           .attr("width", this.width/20)
-      //           .attr("height", this.height/20);
-      //     }
-      //     myImage.src = d.url;
-      //   });
-
-
-  cloud.append('line')
+  clouds.append('line')
     .attr('x1', function(d, i) { return x(i); })
     .attr('y1', function (d, i) { return y(i); })  
     .attr('x2', cW)
@@ -158,7 +100,7 @@ function createGraph() {
       'stroke-width': 2
     });
 
-  var cloudText = cloud.append('g');
+  var cloudText = clouds.append('g');
   cloudText.append('text')
       .text( function (d) { return d.name; })
       .attr({ 
@@ -183,6 +125,55 @@ function createGraph() {
         stroke: '#e9e9e9',
         'stroke-width': 1
       });
+
+  var cloudImg = clouds.selectAll('.cloud')
+    .data(function(d, i) {
+      return d.images.map(function (image) {
+        return { image: image, i: i };
+      });
+    })
+    .enter()
+      .append('g')
+        .attr('id', function(d, i) { return 'image' + d.i + "-" + i; })
+        .attr('x', function(d) { return x(d.i); })
+        .attr('y', function(d) { return y(d.i); })
+        .each(function(d, i) {
+
+        //Load image and get size.
+          var img = new Image();
+          img.onload = function() {
+            var imgA = Math.PI * 2 * Math.random();
+            var imgS = 0.1 + Math.random() * (0.2);
+            var imgR = (cR - maxDim - 20) * Math.random();
+
+            var imgW = this.width * imgS;
+            var imgH = this.height * imgS;
+            var xImg = x(d.i) - maxDim + imgR * Math.sin(imgA);
+            var yImg = y(d.i) - maxDim + imgR * Math.cos(imgA);
+            
+            var image = svg.select('#image' + d.i + "-" + i );
+            image.append('image')
+              .attr('xlink:href', d.image.url)
+              .attr('width', imgW)
+              .attr('height', imgH)
+              .attr('x', xImg)
+              .attr('y', yImg)
+            image.insert('rect', ':first-child')
+              .attr('width', imgW + imgB)
+              .attr('height', imgH + imgB)
+              .attr('x', xImg - imgB/2)
+              .attr('y', yImg - imgB/2)
+              .attr('rx', 2)
+              .attr('ry', 2)
+              .attr({
+                fill: '#ffffff',
+                stroke: '#e9e9e9',
+                'stroke-width': 2
+              });
+          };
+          img.src = d.image.url;
+        });
+
 
   // Center Image and Search
   var center = svg.append('g');
