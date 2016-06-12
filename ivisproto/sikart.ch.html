@@ -59,25 +59,33 @@ body {
     
 </head>
 <body>
-<div class="header">
-  <img class="center" src="img/sikart.jpg">
+<div class='header'>
+  <img class='center' src='img/sikart.jpg'>
 </div>
 
-  <div class="container" style="text-align:center;" id='content'>
+  <div class='container' style='text-align:center;' id='content'>
   </div>
 </div>
-<div class="container top" style="text-align:center;">
-  <a class="link" href="google.ch.html">
-    <img src="img/explorer.jpg" width="130px"/>
+<div class='container top' style='text-align:center;'>
+  <a class='link' href='google.ch.html'>
+    <img src='img/explorer.jpg' width='130px'/>
   </a>
 </div>
 <script src='data/tag_data.js' type='text/javascript' charset='utf-8'></script>
 <script>
+// D3 setup
+d3.selection.prototype.moveToFront = function() {  
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
+
+// Dimensin settings
 var cW = 600;
 var cH = 500;
 var cR = 150;
 
-
+// Params (from URL)
 var params = $_GET();
 var free_params = $_GET();
 
@@ -89,6 +97,7 @@ var maxDim = cR / 4;
 
 // Center Image Settings
 var imgB = 4;
+var factor = 1.5;
 
 // Build graph
 var content =  d3.select('#content');
@@ -168,9 +177,18 @@ function createGraph(data) {
     })
     .enter()
       .append('g')
-        .attr('id', function(d, i) { return 'image' + d.i + "-" + i; })
+        .attr('id', function(d, i) { return 'image' + d.i + '-' + i; })
         .attr('x', function(d) { return x(d.i); })
         .attr('y', function(d) { return y(d.i); })
+        .on('mouseover',function(){ 
+          var imgG = d3.select(this);
+          imgG.moveToFront();
+          var img = imgG.select('image');
+          var imgX = (img.attr('x') * 1.0 + img.attr('width') / 2 ) * (1-factor);
+          var imgY = (img.attr('y') * 1.0 + img.attr('height') / 2 ) * (1-factor);
+          imgG.transition()
+            .attr('transform','translate('+imgX+','+imgY+') scale('+factor+')') })
+        .on('mouseout',function(){ d3.select(this).transition().attr('transform','scale(1.0)') })
         .each(function(d, i) {
 
         //Load image and get size.
@@ -186,7 +204,7 @@ function createGraph(data) {
             var yImg = y(d.i) - maxDim + imgR * Math.cos(imgA);
 
             
-            var image = svg.select('#image' + d.i + "-" + i );
+            var image = svg.select('#image' + d.i + '-' + i );
             image.append('image')
               .attr('xlink:href', d.image.url)
               .attr('width', imgW)
@@ -204,7 +222,7 @@ function createGraph(data) {
                 fill: '#ffffff',
                 stroke: '#e9e9e9',
                 'stroke-width': 2
-              });
+              })
           };
           img.src = d.image.url;
         });
@@ -297,7 +315,7 @@ function createGraph(data) {
           stroke: '#ffffff',
           'stroke-width': 2
         })
-        .on("click", function(){
+        .on('click', function(){
           //var ix = params.indexOf(tag.name);
           free_params.push(params.splice(ix,1)[0]);
 
