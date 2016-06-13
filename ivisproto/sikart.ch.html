@@ -29,7 +29,7 @@ body {
 #graph {
   width: 1200px;
   height: 1000px;
-  border: 1px solid #f9f9f9;
+  border: 0px;
 }
 
 .header {
@@ -38,8 +38,9 @@ body {
 }
 .container {
   position: absolute;
-  top: 200px;
+  top: 210px;
   width: 100%;
+  z-index: 0;
 }
 .top {
   top: 240px;
@@ -48,7 +49,10 @@ body {
   display: block;
   margin: auto;
 }
-
+.detail {
+  position: absolute;
+  z-index: 2; 
+}
 
 .link {
   margin-top: 40px;
@@ -62,9 +66,7 @@ body {
 <div class='header'>
   <img class='center' src='img/sikart.jpg'>
 </div>
-
-  <div class='container' style='text-align:center;' id='content'>
-  </div>
+<div class='container' style='text-align:center;' id='content'></div>
 </div>
 <div class='container top' style='text-align:center;'>
   <a class='link' href='google.ch.html'>
@@ -91,7 +93,7 @@ var free_params = $_GET();
 
 // Radius & Angle
 var er=(cH-cR)/2.2;
-var alpha = Math.PI / 3.5;
+var alpha = Math.PI / 3.2;
 var minDim = cR / 8;
 var maxDim = cR / 4;
 
@@ -115,7 +117,7 @@ function createGraph(data) {
   var delta= 7 / 4 * Math.PI / (data.length);
 
   var x = function(i) {
-    return cW + 2.5 * Math.sin(i * delta + alpha) * er;
+    return cW + 2.8 * Math.sin(i * delta + alpha) * er;
   };
   var y = function(i) {
     return cH + 2.2 * Math.cos(i * delta + alpha) * er;
@@ -169,11 +171,20 @@ function createGraph(data) {
         'stroke-width': 1
       });
 
-  var cloudImg = clouds.selectAll('.cloud')
+  var cloudImages = clouds.append('g')
+    .attr('id', function(d, i) { return 'cloud' + i; })
+    .attr('class', 'cloud');
+
+  var cloudImg = cloudImages.selectAll('.cloud')
     .data(function(d, i) {
-      return d.images.map(function (image) {
-        return { image: image, i: i, count: d.images.length };
+      var images = d.images.map(function (image) {
+        var start = Math.ceil(Math.random() * 4) + 6;
+        var end = Math.ceil(Math.random() * 4) + 10; 
+        return { image: image, i: i, count: d.images.length, sortKey: image.url.substring(start, end) };
       });
+      return images.sort(function(a,b) {
+        return a - b;
+      })
     })
     .enter()
       .append('g')
@@ -189,6 +200,9 @@ function createGraph(data) {
           imgG.transition()
             .attr('transform','translate('+imgX+','+imgY+') scale('+factor+')') })
         .on('mouseout',function(){ d3.select(this).transition().attr('transform','scale(1.0)') })
+        .on('click', function(d) {
+          showImageDetail(d);
+        })
         .each(function(d, i) {
 
         //Load image and get size.
@@ -227,6 +241,81 @@ function createGraph(data) {
           img.src = d.image.url;
         });
 
+  // Relase
+  clouds.append('g')
+    .append('image')
+      .attr('x', function (d, i) { return x(i) - 10; })
+      .attr('y', function (d, i) { return y(i) + cR - 30; })
+      .attr('width' , 20)
+      .attr('height', 20)
+      .attr('xlink:href', 'img/reload.png')
+      .on('click', function(d, i) {
+        var selCloud = d3.select('#cloud' + i);
+        selCloud.selectAll('g').remove('g');
+        selCloud.selectAll('g')
+        .data(function(d) {
+          var images = d.images.map(function (image) {
+            var start = Math.ceil(Math.random() * 4) + 6;
+            var end = Math.ceil(Math.random() * 4) + 10; 
+            return { image: image, i: i, count: d.images.length, sortKey: image.url.substring(start, end) };
+          });
+          return images.sort(function(a,b) {
+            return a - b;
+          })
+        })
+        .enter()
+          .append('g')
+            .attr('id', function(d, i) { return 'image' + d.i + '-' + i; })
+            .attr('x', function(d) { return x(d.i); })
+            .attr('y', function(d) { return y(d.i); })
+            .on('mouseover',function(){ 
+              var imgG = d3.select(this);
+              imgG.moveToFront();
+              var img = imgG.select('image');
+              var imgX = (img.attr('x') * 1.0 + img.attr('width') / 2 ) * (1-factor);
+              var imgY = (img.attr('y') * 1.0 + img.attr('height') / 2 ) * (1-factor);
+              imgG.transition()
+                .attr('transform','translate('+imgX+','+imgY+') scale('+factor+')') })
+            .on('mouseout',function(){ d3.select(this).transition().attr('transform','scale(1.0)') })
+            .each(function(d, i) {
+
+            //Load image and get size.
+              var img = new Image();
+              img.onload = function() {
+                var imgA = Math.PI * Math.random() + Math.PI * (Math.floor(2*i/d.count));
+                var imgS = 0.15 + Math.random() * (0.13);
+                var imgR = (cR - maxDim - 22) * Math.random();
+
+                var imgW = this.width * imgS;
+                var imgH = this.height * imgS;
+                var xImg = x(d.i) - maxDim + imgR * Math.sin(imgA);
+                var yImg = y(d.i) - maxDim + imgR * Math.cos(imgA);
+
+                
+                var image = svg.select('#image' + d.i + '-' + i );
+                image.append('image')
+                  .attr('xlink:href', d.image.url)
+                  .attr('width', imgW)
+                  .attr('height', imgH)
+                  .attr('x', xImg)
+                  .attr('y', yImg)
+                image.insert('rect', ':first-child')
+                  .attr('width', imgW + imgB)
+                  .attr('height', imgH + imgB)
+                  .attr('x', xImg - imgB/2)
+                  .attr('y', yImg - imgB/2)
+                  .attr('rx', 2)
+                  .attr('ry', 2)
+                  .attr({
+                    fill: '#ffffff',
+                    stroke: '#e9e9e9',
+                    'stroke-width': 2
+                  })
+              };
+              img.src = d.image.url;
+            }); 
+      });
+    
 
   // Center Image and Search
   var center = svg.append('g');
@@ -350,6 +439,202 @@ function createGraph(data) {
       }
     });
   }
+
+  // show detail
+  function showImageDetail(data) {
+    var bBox = d3.select('#graph').node().getBBox();
+    var detailW = 700;
+    var detailH = 400;
+    var detailX = bBox.x + (bBox.width - detailW) / 2;
+    var detailPad = 20;
+    var detailImgW = 400;
+    var detailImgH = detailH - detailPad * 2;
+    
+    var closeW = 40;
+
+    var detail = svg.append('g')
+      .attr('class', 'detail');
+    
+    detail.append('rect')
+        .attr('width', bBox.width)
+        .attr('height', bBox.height)
+        .attr({
+          fill: '#ffffff',
+          opacity: 0.5
+        });
+
+    // Detail content
+    detail.append('rect')
+          .attr('width', detailW)
+          .attr('height', detailH)
+          .attr('x', detailX)
+          .attr('y', ($(window).height() - detailH) / 2)
+          .attr({
+            fill: '#444444'
+          });
+
+    // Detail image
+    var img = new Image();
+    img.onload = function() {
+      var imgW = (this.width > this.height) ? detailImgW : this.width * (detailImgH / this.height); 
+      var imgH = (this.width > this.height) ? this.height * (detailImgW / this.width) : detailImgH; 
+      var imgX = detailX + detailPad + (detailImgW - imgW)/2;
+      var imgY = ($(window).height() - detailH)/2 + detailPad + (detailImgH - imgH)/2;
+      console.log(detailImgH - imgH);
+      detail.append('image')
+        .attr('xlink:href', data.image.url)
+        .attr('width', imgW)
+        .attr('height', imgH)
+        .attr('x', imgX)
+        .attr('y', imgY)
+    }
+    img.src = data.image.url;
+
+    // Detail information
+    var infoX = detailX + detailImgW + 3 * detailPad;
+    var infoY = ($(window).height() - detailH)/2 + detailPad * 2;
+    var font =  {
+          'font-family': 'sans-serif',
+          'font-size': '0.8em',
+          'fill': '#ea0f89'
+        }
+    var font2 =  {
+          'font-family': 'sans-serif',
+          'font-size': '0.8em',
+          'fill': '#ffffff'
+        }
+
+    // Künstler
+    detail.append('text')
+      .text('KünstlerIn')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.artist)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Titel
+    detail.append('text')
+      .text('Titel')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.title)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Datierung
+    detail.append('text')
+      .text('Datierung')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.date)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Technik
+    detail.append('text')
+      .text('Technik')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.style)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Masse
+    detail.append('text')
+      .text('Masse')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.size)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Masse
+    detail.append('text')
+      .text('SIK ISEA-Inventarnummer')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.sikNr)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Masse
+    detail.append('text')
+      .text('Letzte Änderung')
+      .attr(font)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 20;
+
+    detail.append('text')
+      .text(data.image.lastUpdate)
+      .attr(font2)
+      .attr('x', infoX)
+      .attr('y', infoY);
+
+    infoY += 27;
+
+    // Close button      
+    detail.append('image')
+      .attr('xlink:href', 'img/close.png')
+      .attr('width', closeW)
+      .attr('height', closeW)
+      .attr('x', detailX + detailW - closeW / 2)
+      .attr('y', ($(window).height() - detailH) / 2 - closeW / 2)
+      .on('click', function() {
+        svg.selectAll('.detail').remove();
+      });
+
+  }
 } 
 
 function setTag(e) {
@@ -365,6 +650,7 @@ function setTag(e) {
     }
   }
 } 
+
 
 function $_GET() {
   var vars = [];
